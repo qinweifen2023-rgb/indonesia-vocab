@@ -136,9 +136,6 @@
            background:#fbfcfd;font-size:13.5px;line-height:1.9}
   .license h4{margin:12px 0 6px;font-size:13.5px}
 </style>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon.svg">
-<meta name="theme-color" content="#14532d">
 </head>
 <body>
 <header>
@@ -1079,7 +1076,7 @@ function playWord(text, st){
   const e = k ? A_INDEX[k] : null;
   if(!e){ if(s) s.textContent = "（该内容暂无配音）"; return; }
   let a = A_ELEM[e.lv];
-  if(!a){ a = new Audio("audio_sprite/sprite-" + e.lv + ".m4a"); a.preload = "auto"; A_ELEM[e.lv] = a; }
+  if(!a){ a = new Audio("bipa-audio-" + e.lv + ".m4a"); a.preload = "auto"; A_ELEM[e.lv] = a; }
   /* 用"唱够时长再停"来截断，不用"位置超过结束秒就停"——
      后者在跳转落在包边界时会刚播就暂停，表现成没声音。*/
   let stopTimer = null;
@@ -1120,6 +1117,5 @@ try{
 
 (function(){var b=document.getElementById('pPlay');if(b)b.onclick=function(){var q=state.qs[state.idx];if(q&&q.word)playWord(q.word.w,'pAudio');};})();
 </script>
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
 </body>
 </html>
