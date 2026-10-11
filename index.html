@@ -863,6 +863,19 @@ function practiceRender(){
   el("pQ").textContent = q.ask;
   el("pQ").className = "qtext" + (q.ask.length>26 ? " small" : "");
   el("pHint").textContent = q.hint || "";
+  /* 防"点喇叭报答案"：答案是印尼语单词的题型（看中文选词、看中文写词），
+     作答前不显示发音按钮；答完再出现，用来核对发音。 */
+  (function(){
+    var pb = el("pPlay");
+    if(!pb) return;
+    if(q.type === "cn_id" || q.type === "spell"){
+      pb.style.display = "none";
+      pb.dataset.locked = "1";
+    } else {
+      pb.style.display = "";
+      pb.dataset.locked = "";
+    }
+  })();
   el("pOpts").innerHTML = "";
   el("pNext").classList.add("hide");
   if(q.type==="listen" || q.type==="spell"){
@@ -891,6 +904,9 @@ function lockPractice(){
   [...el("pOpts").children].forEach(b=>b.disabled=true);
   el("pNext").classList.remove("hide");
   stopTimer();
+  /* 作答结束后解锁发音按钮：这时听发音是核对，不再泄题。 */
+  var pb = el("pPlay");
+  if(pb){ pb.style.display = ""; pb.dataset.locked = ""; }
 }
 
 function practiceAnswer(choice, btn){
@@ -1113,6 +1129,34 @@ try{
   st.id = "homeAudio"; st.className = "muted";
   row.appendChild(b); row.appendChild(st);
   b.onclick = function(){ playWord("terima kasih", "homeAudio"); };
+})();
+
+/* 练习时自动收起顶部那栏，让题面一屏看全；右上角留一个小按钮随时叫回来。 */
+(function(){
+  var bar = document.querySelector("header");
+  if(!bar) return;
+  var btn = document.createElement("button");
+  btn.id = "toggleBar";
+  btn.textContent = "≡ 顶部栏";
+  btn.style.cssText = "position:fixed;top:8px;right:10px;z-index:300;"
+    + "padding:6px 12px;border:1px solid #e3e5e8;background:#fff;border-radius:6px;"
+    + "font-size:13px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08);display:none";
+  btn.onclick = function(){ setHeader(true); };
+  document.body.appendChild(btn);
+
+  function setHeader(visible){
+    bar.style.display = visible ? "" : "none";
+    btn.style.display = visible ? "none" : "block";
+  }
+  window.__setHeader = setHeader;
+
+  if(typeof show === "function"){
+    var _show = show;
+    show = function(view){
+      _show(view);
+      setHeader(view !== "viewPractice");
+    };
+  }
 })();
 
 (function(){var b=document.getElementById('pPlay');if(b)b.onclick=function(){var q=state.qs[state.idx];if(q&&q.word)playWord(q.word.w,'pAudio');};})();
