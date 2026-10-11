@@ -1,0 +1,16 @@
+{
+ "name": "印尼语词汇比拼 · 在线答题系统",
+ "short_name": "印尼语词汇",
+ "start_url": "./index.html",
+ "display": "standalone",
+ "background_color": "#f6f7f9",
+ "theme_color": "#14532d",
+ "description": "印尼语 BIPA 1-6 词汇自学与比赛系统，含神经网络发音。开发者：秦为芬 博士（Ratna），福建技术师范学院外国语学院印尼语专业。",
+ "icons": [
+  {
+   "src": "icon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml"
+  }
+ ]
+}
