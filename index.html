@@ -868,7 +868,7 @@ function practiceRender(){
   (function(){
     var pb = el("pPlay");
     if(!pb) return;
-    if(q.type === "cn_id" || q.type === "spell"){
+    if(q.type !== "listen"){
       pb.style.display = "none";
       pb.dataset.locked = "1";
     } else {
