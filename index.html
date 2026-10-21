@@ -942,6 +942,15 @@ function lockPractice(){
   if(pb){ pb.style.display = ""; pb.dataset.locked = ""; }
 }
 
+function practiceLabel(q){
+  /* 语法题（词缀/词根）的答案不是 q.word，而是 q.answer；
+     反馈和错题本必须显示答案本身，否则会出现“答对了！warna”这种错配。*/
+  if(q.type==="affix" || q.type==="akar"){
+    return {w:String(q.answer), cn:(q.hint || ""), lv:q.word.lv, unit:""};
+  }
+  return q.word;
+}
+
 function practiceAnswer(choice, btn){
   const q = state.qs[state.idx];
   const ok = String(choice)===String(q.answer);
@@ -949,14 +958,14 @@ function practiceAnswer(choice, btn){
   if(ok){
     state.practice.right++;
     btn.classList.add("right");
-    el("pFeedback").textContent = "答对了！" + q.word.w + "　" + q.word.cn;
+    { const lb = practiceLabel(q); el("pFeedback").textContent = "答对了！" + lb.w + "　" + lb.cn; }
     el("pFeedback").className = "feedback ok";
   } else {
     btn.classList.add("wrong");
     [...el("pOpts").children].forEach(el=>{
       if(el.querySelector("span:last-child").textContent===String(q.answer)) el.classList.add("right");
     });
-    state.practice.wrong.push(q.word);
+    state.practice.wrong.push(practiceLabel(q));
     el("pFeedback").textContent = "答错了。正确：" + q.answer;
     el("pFeedback").className = "feedback bad";
   }
@@ -966,7 +975,7 @@ function practiceAnswer(choice, btn){
 function practiceTimeout(){
   const q = state.qs[state.idx];
   state.practice.done++;
-  state.practice.wrong.push(q.word);
+  state.practice.wrong.push(practiceLabel(q));
   el("pFeedback").textContent = "时间到。正确：" + q.answer;
   el("pFeedback").className = "feedback bad";
   lockPractice(); updatePracticeStats();
@@ -980,10 +989,10 @@ function practiceSubmitText(){
   state.practice.done++;
   if(ok){
     state.practice.right++;
-    el("pFeedback").textContent = "答对了！" + q.word.w + "　" + q.word.cn;
+    { const lb = practiceLabel(q); el("pFeedback").textContent = "答对了！" + lb.w + "　" + lb.cn; }
     el("pFeedback").className = "feedback ok";
   } else {
-    state.practice.wrong.push(q.word);
+    state.practice.wrong.push(practiceLabel(q));
     el("pFeedback").textContent = "答错了。正确：" + q.answer;
     el("pFeedback").className = "feedback bad";
   }
