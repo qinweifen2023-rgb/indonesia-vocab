@@ -948,6 +948,10 @@ function practiceLabel(q){
   if(q.type==="affix" || q.type==="akar"){
     return {w:String(q.answer), cn:(q.hint || ""), lv:q.word.lv, unit:""};
   }
+  if(q.type==="antonim" || q.type==="sinonim"){
+    const rel = q.type==="antonim" ? "反义词" : "同义词";
+    return {w:String(q.answer), cn:`（${q.ask} 的${rel}）`, lv:q.word.lv, unit:""};
+  }
   return q.word;
 }
 
